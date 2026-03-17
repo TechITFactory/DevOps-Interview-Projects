@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: production
+  labels:
+    app: web
+    managed-by: argocd
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+  # Controlled rolling update: at most 1 pod unavailable, surge of 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      # Run as non-root; nginx official image supports this
+      securityContext:
+        runAsNonRoot: false   # nginx needs root to bind port 80 — see NOTE below
+        fsGroup: 101          # nginx group
+      containers:
+      - name: web
+        image: nginx:1.27.0
+        ports:
+        - containerPort: 80
+          name: http
+
+        # Probe: readiness — traffic only sent when pod passes
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          failureThreshold: 3
+
+        # Probe: liveness — pod restarted if health fails repeatedly
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 20
+          failureThreshold: 3
+
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "250m"
+            memory: "256Mi"
+
+        # Read-only root FS with writable tmp mounts (security hardening)
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+            add:
+            - NET_BIND_SERVICE   # needed to bind port 80
+
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: nginx-cache
+          mountPath: /var/cache/nginx
+        - name: nginx-run
+          mountPath: /var/run
+
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: nginx-cache
+        emptyDir: {}
+      - name: nginx-run
+        emptyDir: {}
+
+# NOTE: To run nginx completely as non-root, use the nginxinc/nginx-unprivileged
+# image on port 8080. This base image demonstrates common security hardening
+# patterns while keeping the demo compatible with nginx:1.27.x.

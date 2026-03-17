@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Dev overlay — lower replica count, latest image tag for fast iteration
+bases:
+- ../../base
+
+namespace: development
+
+namePrefix: dev-
+
+commonLabels:
+  env: development
+
+# Patch: 1 replica is enough for dev
+patches:
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: web
+
+# Override the image tag for dev (latest always tracks main branch)
+images:
+- name: nginx
+  newTag: "1.27.0"

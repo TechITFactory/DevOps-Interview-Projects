@@ -1,0 +1,11 @@
+# Instructor resources — private, do not distribute to students
+TRANSCRIPT.md
+implementation.sh
+
+# Generated at runtime by setup.sh — do not commit
+job-final.xml
+remote.git/
+
+# Python
+__pycache__/
+*.pyc

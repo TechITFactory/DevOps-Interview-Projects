@@ -1,0 +1,10 @@
+# Instructor recording script — private, do not distribute to students
+TRANSCRIPT.md
+
+# Local kubeconfig overrides — never commit cluster credentials
+kubeconfig
+*.kubeconfig
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db

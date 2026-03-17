@@ -1,0 +1,37 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<!--
+  Jenkins job configuration template.
+  The setup.sh script replaces PIPELINE_SCRIPT_PLACEHOLDER with the
+  escaped content of pipeline.groovy before submitting this via the API.
+-->
+<flow-definition plugin="workflow-job@1400.v7fd111b_ec82f">
+  <actions/>
+  <description>Flask CI/CD Pipeline — builds, tests, and deploys the Flask app on every Git commit.</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <org.jenkinsci.plugins.workflow.job.properties.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>-1</daysToKeep>
+        <numToKeep>10</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </org.jenkinsci.plugins.workflow.job.properties.BuildDiscarderProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@3908.vd6b_b_5a_a_54010">
+    <script><![CDATA[PIPELINE_SCRIPT_PLACEHOLDER]]></script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers>
+    <!--
+      Poll SCM every 2 minutes. In production, replace polling with a
+      webhook: Jenkins → Manage → Configure System → GitHub → Add webhook.
+      H/2 * * * *  =  every 2 minutes with hash-based load distribution
+    -->
+    <hudson.triggers.SCMTrigger>
+      <spec>H/2 * * * *</spec>
+      <ignorePostCommitHooks>false</ignorePostCommitHooks>
+    </hudson.triggers.SCMTrigger>
+  </triggers>
+  <disabled>false</disabled>
+</flow-definition>

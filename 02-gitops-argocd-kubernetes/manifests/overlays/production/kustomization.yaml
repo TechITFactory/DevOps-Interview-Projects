@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Production overlay — uses explicit, signed image tags (never "latest")
+# Update the image tag here (and only here) to promote a release to production.
+bases:
+- ../../base
+
+namespace: production
+
+commonLabels:
+  env: production
+
+# Patch: 3 replicas for production availability
+patches:
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 3
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: web
+
+# Pin to an explicit, immutable image digest in real production.
+# Use an image tag here for readability in this demo.
+images:
+- name: nginx
+  newTag: "1.27.0"

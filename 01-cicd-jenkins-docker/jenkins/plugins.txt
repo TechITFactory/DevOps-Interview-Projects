@@ -1,0 +1,6 @@
+workflow-aggregator:596.v8c21c963d92d
+git:5.2.1
+docker-workflow:572.v950f58993843
+credentials-binding:642.v737c34dea_6c2
+blueocean:1.27.10
+junit:1265.v65b_14fa_f12b_0
