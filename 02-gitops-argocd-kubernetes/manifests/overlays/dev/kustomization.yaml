@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 # Dev overlay — lower replica count, latest image tag for fast iteration
-bases:
+resources:
 - ../../base
 
 namespace: development

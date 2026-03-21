@@ -1,5 +1,6 @@
-# Instructor recording script — private, do not distribute to students
+# Instructor resources — private, do not distribute to students
 TRANSCRIPT.md
+implementation.sh
 
 # Local kubeconfig overrides — never commit cluster credentials
 kubeconfig

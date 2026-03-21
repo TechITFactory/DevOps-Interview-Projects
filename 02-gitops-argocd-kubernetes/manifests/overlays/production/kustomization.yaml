@@ -3,7 +3,7 @@ kind: Kustomization
 
 # Production overlay — uses explicit, signed image tags (never "latest")
 # Update the image tag here (and only here) to promote a release to production.
-bases:
+resources:
 - ../../base
 
 namespace: production

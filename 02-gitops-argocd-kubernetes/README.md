@@ -377,8 +377,7 @@ gh repo delete $GITHUB_USER/gitops-argocd-demo --yes
 
 ## 7. Video Transcript
 
-> The full recording script for this tutorial is in `TRANSCRIPT.md`.
-> That file is excluded from student distribution (see `.gitignore`).
+NA
 
 ---
 
